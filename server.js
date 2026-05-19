@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cors());
 app.use('/auth', authRoutes);
 
-const dbURI = 'mongodb+srv://tarunkumar892804:Sontra143%40%40%40@neuraxcluster.xyfaw58.mongodb.net/?appName=NeuraXCluster';
+const dbURI = 'mongodb+srv://tarunkumar0920004:Sontra143404040@neuraxcluster.xyfaw58.mongodb.net/?appName=NeuraXCluster';
 
 mongoose.connect(dbURI)
   .then(() => console.log('MongoDB connected successfully!'))
