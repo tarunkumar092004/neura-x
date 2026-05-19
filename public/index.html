@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Neura-X AI</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; padding: 20px; }
+        #chat { border: 1px solid #333; height: 300px; overflow-y: scroll; margin-bottom: 10px; padding: 10px; }
+        input { width: 80%; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Neura-X AI Terminal</h1>
+    <div id="chat"></div>
+    <input type="text" id="prompt" placeholder="Kuch pooch bhai...">
+    <button onclick="send()">Send</button>
+
+    <script>
+        async function send() {
+            let prompt = document.getElementById('prompt').value;
+            let res = await fetch('/api/ai/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({userId: 1, prompt: prompt, mode: 'default'})
+            });
+            let data = await res.json();
+            document.getElementById('chat').innerHTML += `<p>User: ${prompt}</p><p>Neura-X: ${data.response}</p>`;
+        }
+    </script>
+</body>
+</html>
