@@ -1,9 +1,14 @@
 <!DOCTYPE html>
 <html>
-<head><title>Dashboard</title></head>
 <body>
     <h1>Welcome to Dashboard!</h1>
-    <p>Login successful.</p>
-    <a href='/'>Logout</a>
+    <button onclick='logout()'>Logout</button>
+    <script>
+        if (!localStorage.getItem('token')) { window.location.href = '/'; }
+        function logout() {
+            localStorage.removeItem('token');
+            window.location.href = '/';
+        }
+    </script>
 </body>
 </html>
