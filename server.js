@@ -1,9 +1,13 @@
+const helmet = require('helmet');
+const helmet = require('helmet');
 const mongoose = require('mongoose');
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
 const authRoutes = require('./routes/auth');
 const app = express();
+app.use(helmet());
+app.use(helmet());
 
 app.use(express.json());
 app.use(cors());
