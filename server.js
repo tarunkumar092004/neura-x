@@ -1,32 +1,15 @@
-const helmet = require('helmet');
-const helmet = require('helmet');
-const mongoose = require('mongoose');
 const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const authRoutes = require('./routes/auth');
+const helmet = require('helmet');
 const app = express();
-app.use(helmet());
-app.use(helmet());
 
+app.use(helmet());
 app.use(express.json());
-app.use(cors());
 
-// Ye line static files (index.html) serve karegi
-app.use(express.static(path.join(__dirname)));
+// Baaki tumhara code yahan rahega...
+const authRoutes = require('./routes/auth');
+const notesRoutes = require('./routes/notes');
 
 app.use('/auth', authRoutes);
-app.use('/notes', require('./routes/notes'));
+app.use('/notes', notesRoutes);
 
-// Root route
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
-
-const dbURI = 'mongodb+srv://tarunkumar0920004:Sontra143404040@neuraxcluster.xyfaw58.mongodb.net/?appName=NeuraXCluster';
-
-mongoose.connect(dbURI)
-  .then(() => console.log('MongoDB connected successfully!'))
-  .catch((err) => console.log('Database error:', err));
-
-app.listen(5000, () => console.log('Server running on port 5000'));
+app.listen(3000, () => console.log('Server running on port 3000'));
