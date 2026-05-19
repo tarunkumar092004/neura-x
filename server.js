@@ -12,6 +12,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname)));
 
 app.use('/auth', authRoutes);
+app.use('/notes', require('./routes/notes'));
 
 // Root route
 app.get('/', (req, res) => {
