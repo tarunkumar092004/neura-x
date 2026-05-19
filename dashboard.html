@@ -13,24 +13,31 @@
 
         async function saveNote() {
             const text = document.getElementById('noteText').value;
-            const res = await fetch('https://neura-x.onrender.com/notes', {
+            await fetch('https://neura-x.onrender.com/notes', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'Authorization': token },
                 body: JSON.stringify({ text })
             });
-            if (res.ok) { alert('Note Saved!'); location.reload(); }
+            location.reload();
+        }
+
+        async function deleteNote(id) {
+            await fetch('https://neura-x.onrender.com/notes/' + id, {
+                method: 'DELETE',
+                headers: { 'Authorization': token }
+            });
+            location.reload();
         }
 
         async function fetchNotes() {
-            const res = await fetch('https://neura-x.onrender.com/notes', {
-                headers: { 'Authorization': token }
-            });
+            const res = await fetch('https://neura-x.onrender.com/notes', { headers: { 'Authorization': token } });
             const notes = await res.json();
-            document.getElementById('notesList').innerHTML = notes.map(n => '<p>' + n.text + '</p>').join('');
+            document.getElementById('notesList').innerHTML = notes.map(n => 
+                '<div>' + n.text + ' <button onclick="deleteNote(\'' + n._id + '\')">Delete</button></div>'
+            ).join('');
         }
-
-        function logout() { localStorage.removeItem('token'); window.location.href = '/'; }
         fetchNotes();
+        function logout() { localStorage.removeItem('token'); window.location.href = '/'; }
     </script>
 </body>
 </html>

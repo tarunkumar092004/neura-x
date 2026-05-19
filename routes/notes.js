@@ -14,4 +14,9 @@ router.get('/', auth, async (req, res) => {
     res.json(notes);
 });
 
+router.delete('/:id', auth, async (req, res) => {
+    await Note.findOneAndDelete({ _id: req.params.id, userId: req.user.userId });
+    res.json({ message: 'Note deleted!' });
+});
+
 module.exports = router;
