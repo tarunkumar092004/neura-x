@@ -1,38 +1,265 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neura-X Auth</title>
-</head>
-<body style="font-family:sans-serif; padding:20px; text-align:center;">
-    <h2>Neura-X Login & Signup</h2>
-    <input id="e" type="email" placeholder="Email" style="padding:10px; margin:5px; width:80%; max-width:300px;"><br>
-    <input id="p" type="password" placeholder="Password" style="padding:10px; margin:5px; width:80%; max-width:300px;"><br><br>
-    <button onclick="f('/auth/login')" style="padding:10px 20px; background:#007bff; color:white; border:none; cursor:pointer;">Login</button>
-    <button onclick="f('/auth/signup')" style="padding:10px 20px; background:#28a745; color:white; border:none; cursor:pointer; margin-left:10px;">Sign Up</button>
-
-    <script>
-        async function f(path) {
-            const email = document.getElementById('e').value;
-            const password = document.getElementById('p').value;
-            if(!email || !password) { alert('Email aur Password daalo bhai!'); return; }
-            try {
-                const res = await fetch(path, {
-                    method: 'POST',
-                    headers: {'Content-Type':'application/json'},
-                    body: JSON.stringify({email, password})
-                });
-                const d = await res.json();
-                if(res.ok && d.token) {
-                    localStorage.setItem('token', d.token);
-                    window.location.href = '/dashboard';
-                } else {
-                    alert('Backend Error: ' + (d.message || d.error || JSON.stringify(d)));
-                }
-            } catch(err) {
-                alert('Network Error: Server respond nahi kar raha!');
-            }
+    <title>NEURA AI - Future Ka Sabse Smart AI</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #050811;
+            --neon-blue: #00f3ff;
+            --neon-purple: #9d4edd;
+            --glass-bg: rgba(13, 20, 38, 0.6);
+            --text-main: #e2e8f0;
         }
-    </script>
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #111936 0%, #050811 100%);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-left: 1px solid rgba(0, 243, 255, 0.2);
+            border-right: 1px solid rgba(0, 243, 255, 0.2);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header Style */
+        .header {
+            padding: 20px;
+            background: rgba(5, 8, 17, 0.8);
+            border-bottom: 1px solid rgba(0, 243, 255, 0.15);
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0, 243, 255, 0.1);
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            color: #fff;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .header p {
+            margin: 5px 0 0 0;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #00f3ff;
+            opacity: 0.8;
+        }
+
+        /* Chat Area */
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 16px;
+            font-size: 15px;
+            line-height: 1.5;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .message.neura {
+            background: rgba(0, 243, 255, 0.05);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            color: #fff;
+            align-self: flex-start;
+            border-top-left-radius: 4px;
+            position: relative;
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #00b4d8, #0077b6);
+            color: white;
+            align-self: flex-end;
+            border-top-right-radius: 4px;
+        }
+
+        /* Input Area */
+        .input-container {
+            padding: 15px;
+            background: rgba(5, 8, 17, 0.9);
+            border-top: 1px solid rgba(0, 243, 255, 0.15);
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .input-box-wrapper {
+            flex: 1;
+            position: relative;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            border-radius: 25px;
+            padding: 2px 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-box-wrapper input {
+            width: 100%;
+            background: none;
+            border: none;
+            padding: 12px 0;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+
+        .send-btn {
+            background: linear-gradient(135deg, var(--neon-blue), #0077b6);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+            transition: 0.3s;
+        }
+
+        .send-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 15px var(--neon-blue);
+        }
+
+        /* Custom Scrollbar */
+        .chat-body::-webkit-scrollbar { width: 4px; }
+        .chat-body::-webkit-scrollbar-thumb { background: rgba(0, 243, 255, 0.2); border-radius: 10px; }
+
+        /* Wave Animation for Loading */
+        .wave-loading {
+            display: flex;
+            gap: 4px;
+            padding: 5px 0;
+        }
+        .wave-bar {
+            width: 3px;
+            height: 15px;
+            background-color: var(--neon-blue);
+            animation: wave 1s infinite ease-in-out;
+        }
+        .wave-bar:nth-child(2) { animation-delay: 0.2s; }
+        .wave-bar:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes wave {
+            0%, 100% { transform: scaleY(0.3); }
+            50% { transform: scaleY(1.5); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h1>NEURA AI</h1>
+        <p>Future Ka Sabse Smart AI</p>
+    </div>
+
+    <div class="chat-body" id="chatBody">
+        <div class="message neura">
+            ⚡ NEURA AI Core Connected.<br>Main hoon Future Ka Sabse Smart AI. Bolna Tarun bhai, aaj kya command hai aapki?
+        </div>
+    </div>
+
+    <div class="input-container">
+        <div class="input-box-wrapper">
+            <input type="text" id="msgInput" placeholder="Type a futuristic command..." autocomplete="off" onkeydown="handleKey(event)">
+        </div>
+        <button class="send-btn" onclick="sendMessage()">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+</div>
+
+<script>
+    const chatBody = document.getElementById('chatBody');
+    const msgInput = document.getElementById('msgInput');
+
+    function handleKey(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+
+    function sendMessage() {
+        const text = msgInput.value.trim();
+        if (!text) return;
+
+        // User Message Display
+        appendMessage(text, 'user');
+        msgInput.value = '';
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Create Loading Element
+        const loadingId = 'load_' + Date.now();
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'message neura';
+        loadingDiv.id = loadingId;
+        loadingDiv.innerHTML = `<div class="wave-loading"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>`;
+        chatBody.appendChild(loadingDiv);
+        chatBody.scrollTop = chatBody.scrollHeight;
+
+        // Connect to live Render Backend
+        fetch('https://neura-x.onrender.com/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: text })
+        })
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById(loadingId).remove();
+            if (data.response) {
+                appendMessage(data.response, 'neura');
+            } else {
+                appendMessage(data.error || "System Error occured.", 'neura');
+            }
+            chatBody.scrollTop = chatBody.scrollHeight;
+        })
+        .catch(() => {
+            document.getElementById(loadingId).remove();
+            appendMessage("[CRITICAL] Neura AI Core Link Broken. Check server.", 'neura');
+            chatBody.scrollTop = chatBody.scrollHeight;
+        });
+    }
+
+    function appendMessage(text, sender) {
+        const div = document.createElement('div');
+        div.className = `message ${sender}`;
+        div.innerText = text;
+        chatBody.appendChild(div);
+    }
+</script>
+
 </body>
 </html>
