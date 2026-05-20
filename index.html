@@ -1,59 +1,25 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        body { font-family: sans-serif; background: #f4f7f6; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); width: 100%; max-width: 350px; }
-        h2 { margin-bottom: 20px; color: #333; }
-        input { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
-        button { width: 100%; padding: 12px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; color: white; }
-        .btn-signup { background: #4285f4; }
-        .btn-login { background: #34a853; }
-    </style>
-</head>
 <body>
-    <div class="card">
-        <h2>Neura-X</h2>
-        <input type="email" id="email" placeholder="Email Address">
-        <input type="password" id="password" placeholder="Password">
-        <button class="btn-signup" onclick="handleAuth('/auth/signup')">Sign Up</button>
-        <button class="btn-login" onclick="handleAuth('/auth/login')">Login</button>
-    </div>
-
+    <h2>Neura-X Login</h2>
+    <input id="email" placeholder="Email"><br>
+    <input id="password" type="password" placeholder="Password"><br>
+    <button onclick="auth('/auth/signup')">Sign Up</button>
+    <button onclick="auth('/auth/login')">Login</button>
     <script>
-        async function handleAuth(endpoint) {
+        async function auth(path) {
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-
-            if (!email || !password) {
-                return alert('Bhai, email aur password dono daalo!');
-            }
-
-            try {
-                const res = await fetch(endpoint, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-
-                const data = await res.json();
-
-                if (res.ok) {
-                    if (endpoint.includes('login')) {
-                        // Token save karo aur dashboard par bhejo
-                        localStorage.setItem('token', data.token);
-                        window.location.href = '/dashboard';
-                    } else {
-                        alert('Sign Up successful! Ab Login button par click karo.');
-                    }
-                } else {
-                    alert('Error: ' + (data.message || 'Kuch gadbad hui'));
-                }
-            } catch (err) {
-                alert('Backend se connect nahi ho pa raha hai!');
-                console.error(err);
-            }
+            const res = await fetch(window.location.origin + path, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({email, password})
+            });
+            const data = await res.json();
+            if (data.token) {
+                localStorage.setItem('token', data.token);
+                window.location.href = '/dashboard';
+            } else { alert(data.message || 'Error'); }
         }
     </script>
 </body>
