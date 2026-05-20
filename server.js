@@ -4,17 +4,21 @@ const app = express();
 
 app.use(express.json());
 
-// Routes (Make sure these files exist)
-try {
-  app.use('/auth', require('./routes/auth'));
-  app.use('/notes', require('./routes/notes'));
-  app.use('/ai', require('./routes/ai'));
-} catch (e) {
-  console.error("Error loading routes:", e);
-}
+// Tumhari HTML files isi folder mein hain, toh unhe allow karo
+app.use(express.static(__dirname)); 
 
-// Serve static files from the root directory
-app.use(express.static(__dirname));
+// Routes load karo
+app.use('/auth', require('./routes/auth'));
 
-const PORT = process.env.PORT || 3000;
+// Jab koi main site khole toh index.html bhejo
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// Jab login ho jaye toh dashboard.html bhejo
+app.get('/dashboard', (req, res) => {
+    res.sendFile(path.join(__dirname, 'dashboard.html'));
+});
+
+const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log('Server running on port ' + PORT));
