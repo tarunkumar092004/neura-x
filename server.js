@@ -1,26 +1,17 @@
 const express = require('express');
 const helmet = require('helmet');
+const cors = require('cors');
 const path = require('path');
 const app = express();
 
-// Security and JSON parser
 app.use(helmet());
+app.use(cors()); // Ye command browser ko permission degi
 app.use(express.json());
-
-// Serve static files
 app.use(express.static(__dirname));
 
-// HOME URL par pehle Login/Signup page (index.html) khulega
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
 
-// DASHBOARD URL ke liye alag se route
-app.get('/dashboard', (req, res) => {
-    res.sendFile(path.join(__dirname, 'dashboard.html'));
-});
-
-// Backend API Routes
 app.use('/auth', require('./routes/auth'));
 app.use('/notes', require('./routes/notes'));
 app.use('/ai', require('./routes/ai'));
