@@ -5,7 +5,12 @@ const { GoogleGenAI } = require('@google/genai');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors());
+// Pure CORS policy ko open kar diya taaki connection block na ho
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Accept']
+}));
 app.use(express.json());
 
 const apiKey = process.env.GEMINI_API_KEY;
@@ -19,6 +24,10 @@ if (apiKey) {
 }
 
 app.post('/api/chat', async (req, res) => {
+    // CORS headers manually bhi set kar dete hain double safety ke liye
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+
     try {
         const { message } = req.body;
         if (!message) return res.status(400).json({ error: "Message missing hai bhai!" });
@@ -34,7 +43,6 @@ app.post('/api/chat', async (req, res) => {
         4. Keep responses concise, smart, and interactive.
         `;
         
-        // Switched to highly stable gemini-1.5-flash to bypass 503 errors
         const response = await ai.models.generateContent({
             model: 'gemini-1.5-flash',
             contents: `${systemInstruction}\nUser: ${message}`,
