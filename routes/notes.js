@@ -1,4 +1,4 @@
 const express = require('express');
 const router = express.Router();
-router.post('/', (req, res) => res.json({message: "Notes route"}));
+router.post('/', (req, res) => res.json({message: "Note saved"}));
 module.exports = router;
