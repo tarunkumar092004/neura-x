@@ -1,11 +1,22 @@
 <!DOCTYPE html>
 <html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body { font-family: sans-serif; display: flex; justify-content: center; padding: 50px; background: #f4f7f6; }
+        .card { background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); width: 100%; max-width: 400px; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
+        button { width: 100%; padding: 12px; border: none; border-radius: 5px; margin-top: 10px; cursor: pointer; color: white; }
+    </style>
+</head>
 <body>
-    <h2>Neura-X Login</h2>
-    <input id="email" placeholder="Email"><br>
-    <input id="password" type="password" placeholder="Password"><br>
-    <button onclick="auth('/auth/signup')">Sign Up</button>
-    <button onclick="auth('/auth/login')">Login</button>
+    <div class="card">
+        <h2>Neura-X Login</h2>
+        <input id="email" type="email" placeholder="Email">
+        <input id="password" type="password" placeholder="Password">
+        <button style="background: #007bff;" onclick="auth('/auth/signup')">Sign Up</button>
+        <button style="background: #28a745;" onclick="auth('/auth/login')">Login</button>
+    </div>
     <script>
         async function auth(path) {
             const email = document.getElementById('email').value;
