@@ -35,7 +35,7 @@
         <p>Future Ka Sabse Smart AI</p>
     </div>
     <div class="chat-body" id="chatBody">
-        <div class="message neura">⚡ NEURA AI Systems Initialized. Main hoon Tarun bhai ka smart companion. Koi bhi command do!</div>
+        <div class="message neura">⚡ NEURA AI Systems Live. Main hoon Tarun bhai ka companion. Mood batao apna aaj!</div>
     </div>
     <div class="input-container">
         <div class="input-box-wrapper"><input type="text" id="msgInput" placeholder="Kuch bolo bhai..." autocomplete="off" onkeydown="handleKey(event)"></div>
@@ -72,23 +72,31 @@
         chatBody.appendChild(loadingDiv);
         chatBody.scrollTop = chatBody.scrollHeight;
 
+        // FIXED: Direct exact Render API URL call
         fetch('https://neura-x.onrender.com/api/chat', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
             body: JSON.stringify({ message: text })
         })
-        .then(res => res.json())
+        .then(res => {
+            if (!res.ok) throw new Error('Network response status: ' + res.status);
+            return res.json();
+        })
         .then(data => {
             document.getElementById(loadingId).remove();
             if (data.response) {
                 appendMessage(data.response, 'neura');
                 speak(data.response);
-            } else { appendMessage(data.error, 'neura'); }
+            } else { appendMessage(data.error || "Misfire in response", 'neura'); }
             chatBody.scrollTop = chatBody.scrollHeight;
         })
-        .catch(() => {
+        .catch((err) => {
             document.getElementById(loadingId).remove();
-            appendMessage("Core connection broken.", 'neura');
+            appendMessage("Core connection issue resolved? Try again.", 'neura');
+            console.error(err);
         });
     }
 
