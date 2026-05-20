@@ -1,10 +1,19 @@
-<input id="e" placeholder="Email"><input id="p" type="password" placeholder="Pass">
-<button onclick="f('/auth/login')">Login</button>
-<script>
-async function f(path) {
-    const res = await fetch(path, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({email:document.getElementById('e').value, password:document.getElementById('p').value})});
-    const d = await res.json();
-    if(d.token) { localStorage.setItem('token', d.token); window.location.href='/dashboard.html'; }
-    else alert('Error');
-}
-</script>
+<!DOCTYPE html>
+<html>
+<body>
+    <input id="e" placeholder="Email"><input id="p" type="password" placeholder="Pass">
+    <button onclick="f()">Login</button>
+    <script>
+        async function f() {
+            const res = await fetch('/auth/login', {
+                method: 'POST', 
+                headers: {'Content-Type':'application/json'}, 
+                body: JSON.stringify({email:document.getElementById('e').value, password:document.getElementById('p').value})
+            });
+            const d = await res.json();
+            if(d.token) { localStorage.setItem('token', d.token); window.location.href='/dashboard.html'; }
+            else alert('Error');
+        }
+    </script>
+</body>
+</html>
