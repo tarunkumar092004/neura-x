@@ -1,44 +1,63 @@
 const express = require('express');
-const path = require('path');
+const cors = require('cors');
+const { GoogleGenAI } = require('@google/genai');
+
 const app = express();
-const PORT = process.env.PORT || 10000;
+const PORT = process.env.PORT || 5000;
 
+// Middleware setup
+app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
 
-app.post('/api/ai', async (req, res) => {
-    const { query } = req.body;
-    const apiKey = process.env.GEMINI_API_KEY;
+// Google Gemini Setup (Automatically picks key from Environment Variable)
+const apiKey = process.env.GEMINI_API_KEY;
+let ai;
 
-    if (!apiKey) {
-        return res.json({ response: "[ERROR] API Key is missing on Server. Set it in Render Environment." });
-    }
+if (apiKey) {
+    ai = new GoogleGenAI({ apiKey: apiKey });
+    console.log("⚡ [SUCCESS] Gemini AI initialized successfully.");
+} else {
+    console.log("⚠️ [WARNING] GEMINI_API_KEY missing in Environment Variables!");
+}
 
+// Chat API Endpoint
+app.post('/api/chat', async (req, res) => {
     try {
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: query }] }]
-            })
+        const { message } = req.body;
+
+        if (!message) {
+            return res.status(400).json({ error: "Bhai, message empty hai!" });
+        }
+
+        if (!ai) {
+            return res.status(500).json({ 
+                error: "[ERROR] Invalid response from AI. Check API Key validity in AI Studio." 
+            });
+        }
+
+        // Terminal style strictly formatted prompt for Neura-X
+        const systemInstruction = "You are Neura-X AI Core Terminal, a highly advanced, intelligent terminal assistant. Keep responses sharp, technical, and concise.";
+        
+        const response = await ai.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: `${systemInstruction}\nUser: ${message}`,
         });
 
-        const data = await response.json();
+        res.json({ response: response.text });
 
-        if (data.candidates && data.candidates[0].content) {
-            res.json({ response: data.candidates[0].content.parts[0].text });
-        } else {
-            console.error("API Error Data:", JSON.stringify(data));
-            res.json({ response: "[ERROR] Invalid response from AI. Check API Key validity in AI Studio." });
-        }
     } catch (error) {
-        res.json({ response: "[ERROR] Connection to Google servers failed." });
+        console.error("API Error:", error);
+        res.status(500).json({ 
+            error: "[ERROR] Invalid response from AI. Check API Key validity in AI Studio." 
+        });
     }
 });
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
+// Root route to check if server is alive
+app.get('/', (req, res) => {
+    res.send("Welcome to Neura-X AI Core Backend is Live! 🚀");
+});
 
 app.listen(PORT, () => {
-    console.log(`Neura-X Server is live on port ${PORT}`);
+    console.log(`🚀 Neura-X Server running on port ${PORT}`);
 });
