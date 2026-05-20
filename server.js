@@ -3,8 +3,12 @@ const helmet = require('helmet');
 const path = require('path');
 const app = express();
 
+// Security and JSON parser
 app.use(helmet());
 app.use(express.json());
+
+// IMPORTANT: Isse tumhari saari HTML/CSS files backend se sahi se connect ho jayengi
+app.use(express.static(__dirname));
 
 // Main page route
 app.get('/', (req, res) => {
