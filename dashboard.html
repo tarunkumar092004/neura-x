@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neura-X Dashboard</title>
+    <title>Neura-X Advanced Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -16,6 +16,7 @@
             color: #ffffff;
             display: flex;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         /* Sidebar Design */
         .sidebar {
@@ -30,8 +31,9 @@
             color: #10b981;
             margin-bottom: 30px;
             font-size: 24px;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             text-align: center;
+            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
         }
         .sidebar a {
             color: #9ca3af;
@@ -40,10 +42,12 @@
             margin-bottom: 10px;
             border-radius: 8px;
             transition: 0.3s;
+            font-weight: 500;
         }
         .sidebar a:hover, .sidebar a.active {
             background-color: #1f2937;
             color: #10b981;
+            box-shadow: inset 4px 0 0 #10b981;
         }
         .logout-btn {
             margin-top: auto;
@@ -58,50 +62,77 @@
         }
         .logout-btn:hover {
             background-color: #dc2626;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
         }
         /* Main Content Design */
         .main-content {
-            flex-1: 1;
+            flex: 1;
             padding: 40px;
-            width: 100%;
         }
         .header {
-            margin-bottom: 30px;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #1f2937;
+            padding-bottom: 20px;
         }
         .header h1 {
-            font-size: 28px;
+            font-size: 32px;
             color: #ffffff;
         }
         .header p {
-            color: #9ca3af;
+            color: #10b981;
             margin-top: 5px;
+            font-weight: 500;
         }
         /* Grid Cards */
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 25px;
         }
         .card {
             background-color: #111827;
-            padding: 20px;
+            padding: 25px;
             border-radius: 12px;
             border: 1px solid #1f2937;
-            transition: 0.3s;
+            transition: all 0.3s ease;
+            position: relative;
         }
         .card:hover {
             border-color: #10b981;
             transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.1);
         }
         .card h3 {
             color: #9ca3af;
-            font-size: 16px;
-            margin-bottom: 10px;
+            font-size: 15px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
         .card p {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: bold;
             color: #10b981;
+        }
+        .pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #10b981;
+            border-radius: 50%;
+            margin-right: 8px;
+            box-shadow: 0 0 10px #10b981;
+            animation: blink 1.5s infinite;
+        }
+        @keyframes blink {
+            0% { opacity: 0.4; }
+            50% { opacity: 1; }
+            100% { opacity: 0.4; }
+        }
+        @media (max-width: 768px) {
+            body { flex-direction: column; }
+            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #1f2937; }
+            .main-content { padding: 20px; }
         }
     </style>
 </head>
@@ -110,32 +141,55 @@
     <div class="sidebar">
         <h2>NEURA-X</h2>
         <a href="#" class="active">Overview</a>
-        <a href="#">Analytics</a>
+        <a href="#">Security Logs</a>
+        <a href="#">Terminal</a>
         <a href="#">Settings</a>
         <button class="logout-btn" onclick="window.location.href='/'">Logout</button>
     </div>
 
     <div class="main-content">
         <div class="header">
-            <h1>Welcome to Neura-X Dashboard</h1>
-            <p>Tumhara live system ekdum mast kaam kar raha hai! 🚀</p>
+            <h1>System Status</h1>
+            <p>Welcome back, Admin. Core modules are operational.</p>
         </div>
 
         <div class="grid">
             <div class="card">
-                <h3>Server Status</h3>
-                <p>ONLINE</p>
+                <h3>Server Core</h3>
+                <p><span class="pulse"></span>ONLINE</p>
             </div>
             <div class="card">
-                <h3>Database Connection</h3>
-                <p>CONNECTED</p>
+                <h3>Ping Latency</h3>
+                <p id="latency-val">12 ms</p>
             </div>
             <div class="card">
-                <h3>Response Time</h3>
-                <p>12ms</p>
+                <h3>Session Uptime</h3>
+                <p id="uptime-val">00:00</p>
             </div>
         </div>
     </div>
+
+    <script>
+        // Real-time ping counter simulation
+        setInterval(() => {
+            const randomPing = Math.floor(Math.random() * (18 - 8 + 1)) + 8;
+            document.getElementById('latency-val').innerText = randomPing + ' ms';
+        }, 2000);
+
+        // Simple live uptime counter
+        let seconds = 0;
+        let minutes = 0;
+        setInterval(() => {
+            seconds++;
+            if(seconds >= 60) {
+                seconds = 0;
+                minutes++;
+            }
+            const minStr = minutes < 10 ? '0' + minutes : minutes;
+            const secStr = seconds < 10 ? '0' + seconds : seconds;
+            document.getElementById('uptime-val').innerText = minStr + ':' + secStr;
+        }, 1000);
+    </script>
 
 </body>
 </html>
