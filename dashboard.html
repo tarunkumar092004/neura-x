@@ -1,23 +1,13 @@
-<!DOCTYPE html>
-<html>
-<body>
-    <h1>My Notes</h1>
-    <textarea id="noteText"></textarea><br>
-    <button onclick="save()">Save Note</button>
-    <button onclick="askAI()">Ask AI</button>
-    <div id="aiRes"></div>
-    <script>
-        const token = localStorage.getItem('token');
-        async function askAI() {
-            const text = document.getElementById('noteText').value;
-            const res = await fetch(window.location.origin + '/ai/summarize', {
-                method: 'POST',
-                headers: {'Content-Type':'application/json'},
-                body: JSON.stringify({text})
-            });
-            const data = await res.json();
-            document.getElementById('aiRes').innerText = data.summary;
-        }
-    </script>
-</body>
-</html>
+<textarea id="t"></textarea>
+<button onclick="s()">Save</button>
+<button onclick="a()">Ask AI</button>
+<div id="r"></div>
+<script>
+const t = localStorage.getItem('token');
+async function s() { await fetch('/notes', {method:'POST', headers:{'Content-Type':'application/json', 'Authorization':t}, body:JSON.stringify({text:document.getElementById('t').value})}); location.reload(); }
+async function a() {
+    const res = await fetch('/ai/summarize', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text:document.getElementById('t').value})});
+    const d = await res.json();
+    document.getElementById('r').innerText = d.summary;
+}
+</script>
