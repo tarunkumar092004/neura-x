@@ -34,8 +34,9 @@ app.post('/api/chat', async (req, res) => {
         4. Keep responses concise, smart, and interactive.
         `;
         
+        // Switched to highly stable gemini-1.5-flash to bypass 503 errors
         const response = await ai.models.generateContent({
-            model: 'gemini-2.5-flash',
+            model: 'gemini-1.5-flash',
             contents: `${systemInstruction}\nUser: ${message}`,
         });
 
