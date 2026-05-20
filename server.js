@@ -7,15 +7,20 @@ const app = express();
 app.use(helmet());
 app.use(express.json());
 
-// IMPORTANT: Isse tumhari saari HTML/CSS files backend se sahi se connect ho jayengi
+// Serve static files
 app.use(express.static(__dirname));
 
-// Main page route
+// HOME URL par pehle Login/Signup page (index.html) khulega
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+// DASHBOARD URL ke liye alag se route
+app.get('/dashboard', (req, res) => {
     res.sendFile(path.join(__dirname, 'dashboard.html'));
 });
 
-// Routes
+// Backend API Routes
 app.use('/auth', require('./routes/auth'));
 app.use('/notes', require('./routes/notes'));
 app.use('/ai', require('./routes/ai'));
