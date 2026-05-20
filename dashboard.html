@@ -1,10 +1,141 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neura-X Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background-color: #0b0f19;
+            color: #ffffff;
+            display: flex;
+            min-height: 100vh;
+        }
+        /* Sidebar Design */
+        .sidebar {
+            width: 260px;
+            background-color: #111827;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #1f2937;
+        }
+        .sidebar h2 {
+            color: #10b981;
+            margin-bottom: 30px;
+            font-size: 24px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+        .sidebar a {
+            color: #9ca3af;
+            text-decoration: none;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            transition: 0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #1f2937;
+            color: #10b981;
+        }
+        .logout-btn {
+            margin-top: auto;
+            background-color: #ef4444;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+        .logout-btn:hover {
+            background-color: #dc2626;
+        }
+        /* Main Content Design */
+        .main-content {
+            flex-1: 1;
+            padding: 40px;
+            width: 100%;
+        }
+        .header {
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            font-size: 28px;
+            color: #ffffff;
+        }
+        .header p {
+            color: #9ca3af;
+            margin-top: 5px;
+        }
+        /* Grid Cards */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .card {
+            background-color: #111827;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #1f2937;
+            transition: 0.3s;
+        }
+        .card:hover {
+            border-color: #10b981;
+            transform: translateY(-5px);
+        }
+        .card h3 {
+            color: #9ca3af;
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+        .card p {
+            font-size: 24px;
+            font-weight: bold;
+            color: #10b981;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to Neura-X Dashboard!</h1>
-    <p>Tumhara login kaam kar raha hai! 🚀</p>
+
+    <div class="sidebar">
+        <h2>NEURA-X</h2>
+        <a href="#" class="active">Overview</a>
+        <a href="#">Analytics</a>
+        <a href="#">Settings</a>
+        <button class="logout-btn" onclick="window.location.href='/'">Logout</button>
+    </div>
+
+    <div class="main-content">
+        <div class="header">
+            <h1>Welcome to Neura-X Dashboard</h1>
+            <p>Tumhara live system ekdum mast kaam kar raha hai! 🚀</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3>Server Status</h3>
+                <p>ONLINE</p>
+            </div>
+            <div class="card">
+                <h3>Database Connection</h3>
+                <p>CONNECTED</p>
+            </div>
+            <div class="card">
+                <h3>Response Time</h3>
+                <p>12ms</p>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
