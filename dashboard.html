@@ -5,178 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neura-X AI Dashboard</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        body {
-            background-color: #0b0f19;
-            color: #ffffff;
-            display: flex;
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
-        /* Sidebar Design */
-        .sidebar {
-            width: 260px;
-            background-color: #111827;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            border-right: 1px solid #1f2937;
-        }
-        .sidebar h2 {
-            color: #10b981;
-            margin-bottom: 30px;
-            font-size: 24px;
-            letter-spacing: 2px;
-            text-align: center;
-            text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
-        }
-        .sidebar a {
-            color: #9ca3af;
-            text-decoration: none;
-            padding: 12px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            transition: 0.3s;
-            font-weight: 500;
-            cursor: pointer;
-        }
-        .sidebar a:hover, .sidebar a.active {
-            background-color: #1f2937;
-            color: #10b981;
-            box-shadow: inset 4px 0 0 #10b981;
-        }
-        .logout-btn {
-            margin-top: auto;
-            background-color: #ef4444;
-            color: white;
-            border: none;
-            padding: 12px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-        .logout-btn:hover {
-            background-color: #dc2626;
-            box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
-        }
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 40px;
-        }
-        .header {
-            margin-bottom: 40px;
-            border-bottom: 1px solid #1f2937;
-            padding-bottom: 20px;
-        }
-        .header h1 {
-            font-size: 32px;
-            color: #ffffff;
-        }
-        .header p {
-            color: #10b981;
-            margin-top: 5px;
-            font-weight: 500;
-        }
-        /* Sections */
-        .tab-content {
-            display: none;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        /* Grid Cards */
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 25px;
-        }
-        .card {
-            background-color: #111827;
-            padding: 25px;
-            border-radius: 12px;
-            border: 1px solid #1f2937;
-            transition: all 0.3s ease;
-        }
-        .card:hover {
-            border-color: #10b981;
-            transform: translateY(-5px);
-        }
-        .card h3 {
-            color: #9ca3af;
-            font-size: 15px;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-        .card p {
-            font-size: 28px;
-            font-weight: bold;
-            color: #10b981;
-        }
-        /* Logs window */
-        .log-box, .terminal-box {
-            background-color: #05070c;
-            border: 1px solid #1f2937;
-            border-radius: 12px;
-            padding: 20px;
-            font-family: 'Courier New', Courier, monospace;
-            height: 300px;
-            overflow-y: auto;
-            color: #34d399;
-        }
-        .log-line {
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-        /* Terminal Input */
-        .terminal-input-container {
-            display: flex;
-            margin-top: 10px;
-            background-color: #05070c;
-            border: 1px solid #1f2937;
-            border-radius: 8px;
-            padding: 10px;
-        }
-        .terminal-prefix {
-            color: #10b981;
-            font-family: 'Courier New', Courier, monospace;
-            margin-right: 10px;
-        }
-        .terminal-input {
-            background: none;
-            border: none;
-            color: #ffffff;
-            font-family: 'Courier New', Courier, monospace;
-            width: 100%;
-            outline: none;
-            font-size: 16px;
-        }
-        .pulse {
-            display: inline-block;
-            width: 10px;
-            height: 10px;
-            background-color: #10b981;
-            border-radius: 50%;
-            margin-right: 8px;
-            box-shadow: 0 0 10px #10b981;
-            animation: blink 1.5s infinite;
-        }
-        @keyframes blink {
-            0% { opacity: 0.4; }
-            50% { opacity: 1; }
-            100% { opacity: 0.4; }
-        }
-        @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #1f2937; }
-            .main-content { padding: 20px; }
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: #0b0f19; color: #ffffff; display: flex; min-height: 100vh; overflow-x: hidden; }
+        .sidebar { width: 260px; background-color: #111827; padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #1f2937; }
+        .sidebar h2 { color: #10b981; margin-bottom: 30px; font-size: 24px; letter-spacing: 2px; text-align: center; text-shadow: 0 0 10px rgba(16, 185, 129, 0.3); }
+        .sidebar a { color: #9ca3af; text-decoration: none; padding: 12px; margin-bottom: 10px; border-radius: 8px; transition: 0.3s; font-weight: 500; cursor: pointer; }
+        .sidebar a:hover, .sidebar a.active { background-color: #1f2937; color: #10b981; box-shadow: inset 4px 0 0 #10b981; }
+        .logout-btn { margin-top: auto; background-color: #ef4444; color: white; border: none; padding: 12px; border-radius: 8px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .logout-btn:hover { background-color: #dc2626; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
+        .main-content { flex: 1; padding: 40px; }
+        .header { margin-bottom: 40px; border-bottom: 1px solid #1f2937; padding-bottom: 20px; }
+        .header h1 { font-size: 32px; color: #ffffff; }
+        .header p { color: #10b981; margin-top: 5px; font-weight: 500; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 25px; }
+        .card { background-color: #111827; padding: 25px; border-radius: 12px; border: 1px solid #1f2937; transition: all 0.3s ease; }
+        .card:hover { border-color: #10b981; transform: translateY(-5px); }
+        .card h3 { color: #9ca3af; font-size: 15px; margin-bottom: 15px; text-transform: uppercase; }
+        .card p { font-size: 28px; font-weight: bold; color: #10b981; }
+        .log-box, .terminal-box { background-color: #05070c; border: 1px solid #1f2937; border-radius: 12px; padding: 20px; font-family: 'Courier New', monospace; height: 320px; overflow-y: auto; color: #34d399; }
+        .log-line { margin-bottom: 8px; font-size: 14px; white-space: pre-wrap; }
+        .terminal-input-container { display: flex; margin-top: 10px; background-color: #05070c; border: 1px solid #1f2937; border-radius: 8px; padding: 10px; }
+        .terminal-prefix { color: #10b981; font-family: 'Courier New', monospace; margin-right: 10px; }
+        .terminal-input { background: none; border: none; color: #ffffff; font-family: 'Courier New', monospace; width: 100%; outline: none; font-size: 16px; }
+        .pulse { display: inline-block; width: 10px; height: 10px; background-color: #10b981; border-radius: 50%; margin-right: 8px; box-shadow: 0 0 10px #10b981; animation: blink 1.5s infinite; }
+        @keyframes blink { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
+        @media (max-width: 768px) { body { flex-direction: column; } .sidebar { width: 100%; border-right: none; border-bottom: 1px solid #1f2937; } .main-content { padding: 20px; } }
     </style>
 </head>
 <body>
@@ -221,37 +76,33 @@
 
         <div id="content-terminal" class="tab-content">
             <div class="terminal-box" id="terminal-box">
-                <div class="log-line">Welcome to Neura-X AI Core Terminal v1.0.0</div>
-                <div class="log-line">Type 'help', 'generate script', 'analyze' or 'status' to interact with the AI.</div>
+                <div class="log-line" style="color: #9ca3af;">Welcome to Neura-X AI Core Terminal v1.0.0</div>
+                <div class="log-line" style="color: #9ca3af;">Loading database history...</div>
             </div>
             <div class="terminal-input-container">
                 <span class="terminal-prefix">neura-x@ai-core:~$</span>
                 <input type="text" class="terminal-input" id="term-in" onkeypress="handleTerminal(event)" placeholder="Ask Neura-X AI anything...">
             </div>
         </div>
-
     </div>
 
     <script>
-        // Tab switching logic
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.sidebar a').forEach(el => el.classList.remove('active'));
-            
             document.getElementById('content-' + tabName).classList.add('active');
             document.getElementById('tab-' + tabName).classList.add('active');
-            
             document.getElementById('page-title').innerText = tabName.toUpperCase();
         }
 
-        // Real-time Token generation simulation
+        // Token simulation
         setInterval(() => {
             const randomTokens = Math.floor(Math.random() * (55 - 40 + 1)) + 40;
             const el = document.getElementById('latency-val');
             if(el) el.innerText = randomTokens + ' t/s';
         }, 2000);
 
-        // Live uptime counter
+        // Uptime timer
         let seconds = 0, minutes = 0;
         setInterval(() => {
             seconds++;
@@ -262,50 +113,49 @@
             if(el) el.innerText = minStr + ':' + secStr;
         }, 1000);
 
-        // AI Training/Processing Logs Simulator
-        const logsMock = [
-            "[INFO] Processing deep learning neural layers...",
-            "[SUCCESS] Optimization complete: Loss gradient reduced to 0.024",
-            "[INFO] Context window refreshed: 8k tokens allocated.",
-            "[SUCCESS] User query successfully resolved via AI pipeline."
-        ];
-        setInterval(() => {
-            const box = document.getElementById('log-box');
-            if(box) {
-                const randomLog = logsMock[Math.floor(Math.random() * logsMock.length)];
-                box.innerHTML += `<div class="log-line">${randomLog}</div>`;
-                box.scrollTop = box.scrollHeight;
-            }
-        }, 4000);
+        // Fetch logs on startup
+        async function loadHistory() {
+            try {
+                const res = await fetch('/api/ai/history');
+                const data = await res.json();
+                const box = document.getElementById('terminal-box');
+                if(data.history && box) {
+                    data.history.forEach(log => {
+                        box.innerHTML += `<div class="log-line" style="color:#ffffff">> ${log.user_query}</div>`;
+                        box.innerHTML += `<div class="log-line">${log.ai_response}</div>`;
+                    });
+                    box.scrollTop = box.scrollHeight;
+                }
+            } catch(e) { console.error("Error loading history", e); }
+        }
+        window.onload = loadHistory;
 
-        // AI Terminal Interaction Logic
-        function handleTerminal(e) {
+        // Handle Input Submission
+        async function handleTerminal(e) {
             if(e.key === 'Enter') {
                 const input = document.getElementById('term-in');
-                const cmd = input.value.trim().toLowerCase();
+                const queryText = input.value.trim();
+                if(!queryText) return;
+
                 const box = document.getElementById('terminal-box');
-                
-                box.innerHTML += `<div class="log-line" style="color:#ffffff">> ${input.value}</div>`;
-                
-                if(cmd === 'help') {
-                    box.innerHTML += `<div class="log-line" style="color:#10b981">[NEURA-X] Try typing: 'status', 'generate script', 'analyze data' or 'clear'</div>`;
-                } else if(cmd === 'status') {
-                    box.innerHTML += `<div class="log-line">[SYSTEM] Neura-X LLM is stable. Temperature: 0.7. Memory allocation optimal.</div>`;
-                } else if(cmd.includes('script')) {
-                    box.innerHTML += `<div class="log-line" style="color:#eab308">[AI GENERATING] Cinematic Video Script:<br>Scene 1: Dark cybercity alleyway with neon reflections.<br>Voiceover: "The future belongs to those who control the node."</div>`;
-                } else if(cmd.includes('analyze')) {
-                    box.innerHTML += `<div class="log-line">[AI PROCESSING] Analyzing dataset pattern... Done. Pattern shows exponential user growth.</div>`;
-                } else if(cmd === 'clear') {
-                    box.innerHTML = '';
-                } else {
-                    box.innerHTML += `<div class="log-line" style="color:#9ca3af">[NEURA-X]: "Thinking... I received your query: '${input.value}'. This function will connect to the cloud API in the next version!"</div>`;
-                }
-                
-                box.scrollTop = box.scrollHeight;
+                box.innerHTML += `<div class="log-line" style="color:#ffffff">> ${queryText}</div>`;
                 input.value = '';
+                box.scrollTop = box.scrollHeight;
+
+                try {
+                    const response = await fetch('/api/ai', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ query: queryText })
+                    });
+                    const data = await response.json();
+                    box.innerHTML += `<div class="log-line">${data.response}</div>`;
+                } catch(err) {
+                    box.innerHTML += `<div class="log-line" style="color:#ef4444">[ERROR] Connection failed to AI backend.</div>`;
+                }
+                box.scrollTop = box.scrollHeight;
             }
         }
     </script>
-
 </body>
 </html>
