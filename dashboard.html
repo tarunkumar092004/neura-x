@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Neura-X Advanced Dashboard</title>
+    <title>Neura-X AI Dashboard</title>
     <style>
         * {
             margin: 0;
@@ -184,29 +184,29 @@
     <div class="sidebar">
         <h2>NEURA-X</h2>
         <a onclick="switchTab('overview')" id="tab-overview" class="active">Overview</a>
-        <a onclick="switchTab('logs')" id="tab-logs">Security Logs</a>
-        <a onclick="switchTab('terminal')" id="tab-terminal">Terminal</a>
+        <a onclick="switchTab('logs')" id="tab-logs">AI System Logs</a>
+        <a onclick="switchTab('terminal')" id="tab-terminal">AI Core Terminal</a>
         <button class="logout-btn" onclick="window.location.href='/'">Logout</button>
     </div>
 
     <div class="main-content">
         <div class="header">
-            <h1 id="page-title">System Status</h1>
-            <p>Welcome back, Admin. Core modules are operational.</p>
+            <h1 id="page-title">AI System Status</h1>
+            <p>Neura-X Neural Network Core is active and thinking.</p>
         </div>
 
         <div id="content-overview" class="tab-content active">
             <div class="grid">
                 <div class="card">
-                    <h3>Server Core</h3>
-                    <p><span class="pulse"></span>ONLINE</p>
+                    <h3>AI Model Status</h3>
+                    <p><span class="pulse"></span>ACTIVE</p>
                 </div>
                 <div class="card">
-                    <h3>Ping Latency</h3>
-                    <p id="latency-val">12 ms</p>
+                    <h3>Tokens / Sec</h3>
+                    <p id="latency-val">45 t/s</p>
                 </div>
                 <div class="card">
-                    <h3>Session Uptime</h3>
+                    <h3>Uptime Track</h3>
                     <p id="uptime-val">00:00</p>
                 </div>
             </div>
@@ -214,19 +214,19 @@
 
         <div id="content-logs" class="tab-content">
             <div class="log-box" id="log-box">
-                <div class="log-line">[INFO] Initializing Neura-X Firewalls...</div>
-                <div class="log-line">[SUCCESS] Security protocols armed.</div>
+                <div class="log-line">[INFO] Loading Neura-X Large Language Model...</div>
+                <div class="log-line">[SUCCESS] Neural weights synced successfully. Memory optimized.</div>
             </div>
         </div>
 
         <div id="content-terminal" class="tab-content">
             <div class="terminal-box" id="terminal-box">
-                <div class="log-line">Welcome to Neura-X Core Terminal v1.0.0</div>
-                <div class="log-line">Type 'help' or 'status' to check diagnostics.</div>
+                <div class="log-line">Welcome to Neura-X AI Core Terminal v1.0.0</div>
+                <div class="log-line">Type 'help', 'generate script', 'analyze' or 'status' to interact with the AI.</div>
             </div>
             <div class="terminal-input-container">
-                <span class="terminal-prefix">neura-x@admin:~$</span>
-                <input type="text" class="terminal-input" id="term-in" onkeypress="handleTerminal(event)" placeholder="Enter system command...">
+                <span class="terminal-prefix">neura-x@ai-core:~$</span>
+                <input type="text" class="terminal-input" id="term-in" onkeypress="handleTerminal(event)" placeholder="Ask Neura-X AI anything...">
             </div>
         </div>
 
@@ -244,11 +244,11 @@
             document.getElementById('page-title').innerText = tabName.toUpperCase();
         }
 
-        // Real-time ping counter simulation
+        // Real-time Token generation simulation
         setInterval(() => {
-            const randomPing = Math.floor(Math.random() * (18 - 8 + 1)) + 8;
+            const randomTokens = Math.floor(Math.random() * (55 - 40 + 1)) + 40;
             const el = document.getElementById('latency-val');
-            if(el) el.innerText = randomPing + ' ms';
+            if(el) el.innerText = randomTokens + ' t/s';
         }, 2000);
 
         // Live uptime counter
@@ -262,12 +262,12 @@
             if(el) el.innerText = minStr + ':' + secStr;
         }, 1000);
 
-        // Security Logs Simulator
+        // AI Training/Processing Logs Simulator
         const logsMock = [
-            "[WARN] Firewall blocked unauthorized scan from IP 192.168.1.105",
-            "[INFO] Encrypted data sync complete with main cluster.",
-            "[SUCCESS] Threat database fully updated.",
-            "[INFO] Periodic integrity check: 0 errors found."
+            "[INFO] Processing deep learning neural layers...",
+            "[SUCCESS] Optimization complete: Loss gradient reduced to 0.024",
+            "[INFO] Context window refreshed: 8k tokens allocated.",
+            "[SUCCESS] User query successfully resolved via AI pipeline."
         ];
         setInterval(() => {
             const box = document.getElementById('log-box');
@@ -278,25 +278,27 @@
             }
         }, 4000);
 
-        // Simple Simulated Terminal Logic
+        // AI Terminal Interaction Logic
         function handleTerminal(e) {
             if(e.key === 'Enter') {
                 const input = document.getElementById('term-in');
                 const cmd = input.value.trim().toLowerCase();
                 const box = document.getElementById('terminal-box');
                 
-                box.innerHTML += `<div class="log-line" style="color:#ffffff">> ${cmd}</div>`;
+                box.innerHTML += `<div class="log-line" style="color:#ffffff">> ${input.value}</div>`;
                 
                 if(cmd === 'help') {
-                    box.innerHTML += `<div class="log-line">Available commands: help, status, clear, neura</div>`;
+                    box.innerHTML += `<div class="log-line" style="color:#10b981">[NEURA-X] Try typing: 'status', 'generate script', 'analyze data' or 'clear'</div>`;
                 } else if(cmd === 'status') {
-                    box.innerHTML += `<div class="log-line">[SYSTEM] All services running at maximum capacity. CPU: 14%</div>`;
-                } else if(cmd === 'neura') {
-                    box.innerHTML += `<div class="log-line" style="color:#10b981">NEURA-X: Decentralized Web Node Active.</div>`;
+                    box.innerHTML += `<div class="log-line">[SYSTEM] Neura-X LLM is stable. Temperature: 0.7. Memory allocation optimal.</div>`;
+                } else if(cmd.includes('script')) {
+                    box.innerHTML += `<div class="log-line" style="color:#eab308">[AI GENERATING] Cinematic Video Script:<br>Scene 1: Dark cybercity alleyway with neon reflections.<br>Voiceover: "The future belongs to those who control the node."</div>`;
+                } else if(cmd.includes('analyze')) {
+                    box.innerHTML += `<div class="log-line">[AI PROCESSING] Analyzing dataset pattern... Done. Pattern shows exponential user growth.</div>`;
                 } else if(cmd === 'clear') {
                     box.innerHTML = '';
                 } else {
-                    box.innerHTML += `<div class="log-line" style="color:#ef4444">Command not found: '${cmd}'</div>`;
+                    box.innerHTML += `<div class="log-line" style="color:#9ca3af">[NEURA-X]: "Thinking... I received your query: '${input.value}'. This function will connect to the cloud API in the next version!"</div>`;
                 }
                 
                 box.scrollTop = box.scrollHeight;
