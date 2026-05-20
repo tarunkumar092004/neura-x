@@ -4,13 +4,17 @@ const app = express();
 
 app.use(express.json());
 
-// Routes - make sure these files exist in your routes folder
-app.use('/auth', require('./routes/auth'));
-app.use('/notes', require('./routes/notes'));
-app.use('/ai', require('./routes/ai'));
+// Routes (Make sure these files exist)
+try {
+  app.use('/auth', require('./routes/auth'));
+  app.use('/notes', require('./routes/notes'));
+  app.use('/ai', require('./routes/ai'));
+} catch (e) {
+  console.error("Error loading routes:", e);
+}
 
-// Serve static files
-app.use(express.static(path.join(__dirname)));
+// Serve static files from the root directory
+app.use(express.static(__dirname));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log('Server running on port ' + PORT));
