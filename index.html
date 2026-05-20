@@ -4,10 +4,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Neura-X Auth</title>
 </head>
-<body style="font-family:sans-serif; padding:20px;">
+<body style="font-family:sans-serif; padding:20px; text-align:center;">
     <h2>Neura-X Login & Signup</h2>
-    <input id="e" type="email" placeholder="Email" style="padding:8px; margin:5px 0; width:80%; max-width:300px;"><br>
-    <input id="p" type="password" placeholder="Password" style="padding:8px; margin:5px 0; width:80%; max-width:300px;"><br><br>
+    <input id="e" type="email" placeholder="Email" style="padding:10px; margin:5px; width:80%; max-width:300px;"><br>
+    <input id="p" type="password" placeholder="Password" style="padding:10px; margin:5px; width:80%; max-width:300px;"><br><br>
     <button onclick="f('/auth/login')" style="padding:10px 20px; background:#007bff; color:white; border:none; cursor:pointer;">Login</button>
     <button onclick="f('/auth/signup')" style="padding:10px 20px; background:#28a745; color:white; border:none; cursor:pointer; margin-left:10px;">Sign Up</button>
 
@@ -15,30 +15,22 @@
         async function f(path) {
             const email = document.getElementById('e').value;
             const password = document.getElementById('p').value;
-            
-            if(!email || !password) {
-                alert('Bhai, email aur password dono daalo!');
-                return;
-            }
-
+            if(!email || !password) { alert('Email aur Password daalo bhai!'); return; }
             try {
                 const res = await fetch(path, {
-                    method: 'POST', 
-                    headers: {'Content-Type':'application/json'}, 
-                    body: JSON.stringify({ email, password })
+                    method: 'POST',
+                    headers: {'Content-Type':'application/json'},
+                    body: JSON.stringify({email, password})
                 });
-                
                 const d = await res.json();
-                
-                if(res.ok && d.token) { 
-                    localStorage.setItem('token', d.token); 
-                    window.location.href = '/dashboard.html'; 
-                } else { 
-                    // Ye line ab exact error message show karegi screen par
-                    alert('Backend Error: ' + (d.message || d.error || JSON.stringify(d))); 
+                if(res.ok && d.token) {
+                    localStorage.setItem('token', d.token);
+                    window.location.href = '/dashboard';
+                } else {
+                    alert('Backend Error: ' + (d.message || d.error || JSON.stringify(d)));
                 }
             } catch(err) {
-                alert('Network Error: Server tak request nahi pahonch rahi!');
+                alert('Network Error: Server respond nahi kar raha!');
             }
         }
     </script>

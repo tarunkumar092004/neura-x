@@ -1,13 +1,41 @@
-<textarea id="t"></textarea>
-<button onclick="s()">Save</button>
-<button onclick="a()">Ask AI</button>
-<div id="r"></div>
-<script>
-const t = localStorage.getItem('token');
-async function s() { await fetch('/notes', {method:'POST', headers:{'Content-Type':'application/json', 'Authorization':t}, body:JSON.stringify({text:document.getElementById('t').value})}); location.reload(); }
-async function a() {
-    const res = await fetch('/ai/summarize', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({text:document.getElementById('t').value})});
-    const d = await res.json();
-    document.getElementById('r').innerText = d.summary;
-}
-</script>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body style="font-family:sans-serif; padding:20px;">
+    <h2>My Notes</h2>
+    <textarea id="t" style="width:100%; height:150px; padding:10px;"></textarea><br><br>
+    <button onclick="s()" style="padding:10px 20px; background:#28a745; color:white; border:none;">Save Note</button>
+    <button onclick="a()" style="padding:10px 20px; background:#17a2b8; color:white; border:none; margin-left:10px;">Ask AI</button>
+    <br><br>
+    <div id="r" style="padding:10px; background:#eee; border-radius:5px; min-height:50px;">AI Response yahan aayega...</div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if(!token) { alert('Pehle login karo!'); window.location.href = '/'; }
+
+        async function s() {
+            await fetch('/notes', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json', 'Authorization': token},
+                body: JSON.stringify({text: document.getElementById('t').value})
+            });
+            alert('Note saved!');
+            location.reload();
+        }
+
+        async function a() {
+            document.getElementById('r').innerText = "AI soch raha hai...";
+            const res = await fetch('/ai/summarize', {
+                method: 'POST',
+                headers: {'Content-Type':'application/json', 'Authorization': token},
+                body: JSON.stringify({text: document.getElementById('t').value})
+            });
+            const d = await res.json();
+            document.getElementById('r').innerText = d.summary || JSON.stringify(d);
+        }
+    </script>
+</body>
+</html>

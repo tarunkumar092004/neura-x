@@ -5,12 +5,12 @@ const app = express();
 app.use(express.json());
 app.use(express.static(__dirname));
 
-// HTML routing fix
+// Routes ke liye paths
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
 app.get('/dashboard.html', (req, res) => res.sendFile(path.join(__dirname, 'dashboard.html')));
 
-// API Routes
+// API Endpoints
 app.use('/auth', require('./routes/auth'));
 app.use('/notes', require('./routes/notes'));
 app.use('/ai', require('./routes/ai'));
