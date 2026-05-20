@@ -43,6 +43,7 @@
             border-radius: 8px;
             transition: 0.3s;
             font-weight: 500;
+            cursor: pointer;
         }
         .sidebar a:hover, .sidebar a.active {
             background-color: #1f2937;
@@ -64,7 +65,7 @@
             background-color: #dc2626;
             box-shadow: 0 0 15px rgba(239, 68, 68, 0.4);
         }
-        /* Main Content Design */
+        /* Main Content */
         .main-content {
             flex: 1;
             padding: 40px;
@@ -83,6 +84,13 @@
             margin-top: 5px;
             font-weight: 500;
         }
+        /* Sections */
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
         /* Grid Cards */
         .grid {
             display: grid;
@@ -95,24 +103,59 @@
             border-radius: 12px;
             border: 1px solid #1f2937;
             transition: all 0.3s ease;
-            position: relative;
         }
         .card:hover {
             border-color: #10b981;
             transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.1);
         }
         .card h3 {
             color: #9ca3af;
             font-size: 15px;
             margin-bottom: 15px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
         .card p {
             font-size: 28px;
             font-weight: bold;
             color: #10b981;
+        }
+        /* Logs window */
+        .log-box, .terminal-box {
+            background-color: #05070c;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            height: 300px;
+            overflow-y: auto;
+            color: #34d399;
+        }
+        .log-line {
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        /* Terminal Input */
+        .terminal-input-container {
+            display: flex;
+            margin-top: 10px;
+            background-color: #05070c;
+            border: 1px solid #1f2937;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        .terminal-prefix {
+            color: #10b981;
+            font-family: 'Courier New', Courier, monospace;
+            margin-right: 10px;
+        }
+        .terminal-input {
+            background: none;
+            border: none;
+            color: #ffffff;
+            font-family: 'Courier New', Courier, monospace;
+            width: 100%;
+            outline: none;
+            font-size: 16px;
         }
         .pulse {
             display: inline-block;
@@ -140,55 +183,126 @@
 
     <div class="sidebar">
         <h2>NEURA-X</h2>
-        <a href="#" class="active">Overview</a>
-        <a href="#">Security Logs</a>
-        <a href="#">Terminal</a>
-        <a href="#">Settings</a>
+        <a onclick="switchTab('overview')" id="tab-overview" class="active">Overview</a>
+        <a onclick="switchTab('logs')" id="tab-logs">Security Logs</a>
+        <a onclick="switchTab('terminal')" id="tab-terminal">Terminal</a>
         <button class="logout-btn" onclick="window.location.href='/'">Logout</button>
     </div>
 
     <div class="main-content">
         <div class="header">
-            <h1>System Status</h1>
+            <h1 id="page-title">System Status</h1>
             <p>Welcome back, Admin. Core modules are operational.</p>
         </div>
 
-        <div class="grid">
-            <div class="card">
-                <h3>Server Core</h3>
-                <p><span class="pulse"></span>ONLINE</p>
-            </div>
-            <div class="card">
-                <h3>Ping Latency</h3>
-                <p id="latency-val">12 ms</p>
-            </div>
-            <div class="card">
-                <h3>Session Uptime</h3>
-                <p id="uptime-val">00:00</p>
+        <div id="content-overview" class="tab-content active">
+            <div class="grid">
+                <div class="card">
+                    <h3>Server Core</h3>
+                    <p><span class="pulse"></span>ONLINE</p>
+                </div>
+                <div class="card">
+                    <h3>Ping Latency</h3>
+                    <p id="latency-val">12 ms</p>
+                </div>
+                <div class="card">
+                    <h3>Session Uptime</h3>
+                    <p id="uptime-val">00:00</p>
+                </div>
             </div>
         </div>
+
+        <div id="content-logs" class="tab-content">
+            <div class="log-box" id="log-box">
+                <div class="log-line">[INFO] Initializing Neura-X Firewalls...</div>
+                <div class="log-line">[SUCCESS] Security protocols armed.</div>
+            </div>
+        </div>
+
+        <div id="content-terminal" class="tab-content">
+            <div class="terminal-box" id="terminal-box">
+                <div class="log-line">Welcome to Neura-X Core Terminal v1.0.0</div>
+                <div class="log-line">Type 'help' or 'status' to check diagnostics.</div>
+            </div>
+            <div class="terminal-input-container">
+                <span class="terminal-prefix">neura-x@admin:~$</span>
+                <input type="text" class="terminal-input" id="term-in" onkeypress="handleTerminal(event)" placeholder="Enter system command...">
+            </div>
+        </div>
+
     </div>
 
     <script>
+        // Tab switching logic
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.sidebar a').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById('content-' + tabName).classList.add('active');
+            document.getElementById('tab-' + tabName).classList.add('active');
+            
+            document.getElementById('page-title').innerText = tabName.toUpperCase();
+        }
+
         // Real-time ping counter simulation
         setInterval(() => {
             const randomPing = Math.floor(Math.random() * (18 - 8 + 1)) + 8;
-            document.getElementById('latency-val').innerText = randomPing + ' ms';
+            const el = document.getElementById('latency-val');
+            if(el) el.innerText = randomPing + ' ms';
         }, 2000);
 
-        // Simple live uptime counter
-        let seconds = 0;
-        let minutes = 0;
+        // Live uptime counter
+        let seconds = 0, minutes = 0;
         setInterval(() => {
             seconds++;
-            if(seconds >= 60) {
-                seconds = 0;
-                minutes++;
-            }
+            if(seconds >= 60) { seconds = 0; minutes++; }
             const minStr = minutes < 10 ? '0' + minutes : minutes;
             const secStr = seconds < 10 ? '0' + seconds : seconds;
-            document.getElementById('uptime-val').innerText = minStr + ':' + secStr;
+            const el = document.getElementById('uptime-val');
+            if(el) el.innerText = minStr + ':' + secStr;
         }, 1000);
+
+        // Security Logs Simulator
+        const logsMock = [
+            "[WARN] Firewall blocked unauthorized scan from IP 192.168.1.105",
+            "[INFO] Encrypted data sync complete with main cluster.",
+            "[SUCCESS] Threat database fully updated.",
+            "[INFO] Periodic integrity check: 0 errors found."
+        ];
+        setInterval(() => {
+            const box = document.getElementById('log-box');
+            if(box) {
+                const randomLog = logsMock[Math.floor(Math.random() * logsMock.length)];
+                box.innerHTML += `<div class="log-line">${randomLog}</div>`;
+                box.scrollTop = box.scrollHeight;
+            }
+        }, 4000);
+
+        // Simple Simulated Terminal Logic
+        function handleTerminal(e) {
+            if(e.key === 'Enter') {
+                const input = document.getElementById('term-in');
+                const cmd = input.value.trim().toLowerCase();
+                const box = document.getElementById('terminal-box');
+                
+                box.innerHTML += `<div class="log-line" style="color:#ffffff">> ${cmd}</div>`;
+                
+                if(cmd === 'help') {
+                    box.innerHTML += `<div class="log-line">Available commands: help, status, clear, neura</div>`;
+                } else if(cmd === 'status') {
+                    box.innerHTML += `<div class="log-line">[SYSTEM] All services running at maximum capacity. CPU: 14%</div>`;
+                } else if(cmd === 'neura') {
+                    box.innerHTML += `<div class="log-line" style="color:#10b981">NEURA-X: Decentralized Web Node Active.</div>`;
+                } else if(cmd === 'clear') {
+                    box.innerHTML = '';
+                } else {
+                    box.innerHTML += `<div class="log-line" style="color:#ef4444">Command not found: '${cmd}'</div>`;
+                }
+                
+                box.scrollTop = box.scrollHeight;
+                input.value = '';
+            }
+        }
     </script>
 
 </body>
