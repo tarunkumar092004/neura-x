@@ -10,15 +10,22 @@
             const input = document.getElementById('input');
             const chat = document.getElementById('chat');
             const msg = input.value;
-            chat.innerHTML += `<p><b>Aap:</b> ${msg}</p>`;
+            if(!msg) return;
             
-            const res = await fetch('https://neura-x.onrender.com/api/chat', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({ message: msg })
-            });
-            const data = await res.json();
-            chat.innerHTML += `<p><b>AI:</b> ${data.response}</p>`;
+            chat.innerHTML += `<p><b>Aap:</b> ${msg}</p>`;
+            input.value = 'Thinking...';
+            
+            try {
+                const res = await fetch('https://neura-x.onrender.com/api/chat', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await res.json();
+                chat.innerHTML += `<p><b>AI:</b> ${data.response}</p>`;
+            } catch (err) {
+                chat.innerHTML += `<p><b>Error:</b> Server se connection nahi hua.</p>`;
+            }
             input.value = '';
         }
     </script>
