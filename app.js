@@ -1,29 +1,35 @@
 const express = require('express');
-const cors = require('cors');
-const { GoogleGenerativeAI } = require("@google/generative-ai");
-
+const path = require('path');
 const app = express();
-const port = process.env.PORT || 10000;
+const PORT = process.env.PORT || 10000;
 
-app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, '.')));
 
-// API Key initialization
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const API_KEY = "AIzaSyDB_ldn7yopDMvPcN1fvuiuoVxX4aAA9-Y";
 
-app.post('/api/chat', async (req, res) => {
+app.post('/api/ai', async (req, res) => {
+    const { query } = req.body;
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
     try {
-        const { message } = req.body;
-        if (!message) return res.status(400).json({ response: "Message khali hai!" });
-        
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-        const result = await model.generateContent(message);
-        const response = await result.response;
-        res.json({ response: response.text() });
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: query }] }] })
+        });
+        const data = await response.json();
+        if (data.candidates && data.candidates[0].content) {
+            res.json({ response: data.candidates[0].content.parts[0].text });
+        } else {
+            res.json({ response: "Error: " + JSON.stringify(data.error) });
+        }
     } catch (e) {
-        console.error("API Error:", e);
-        res.status(500).json({ response: "Backend Error: " + e.message });
+        res.json({ response: "Connection Failed." });
     }
 });
 
-app.listen(port, () => console.log('Server running on port ' + port));
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'index.html'))); // Dashboard ke liye index use kar rahe hain
+
+app.listen(PORT, () => console.log(`Neura AI running on ${PORT}`));
