@@ -10,26 +10,27 @@ const API_KEY = "AIzaSyDB_ldn7yopDMvPcN1fvuiuoVxX4aAA9-Y";
 
 app.post('/api/ai', async (req, res) => {
     const { query } = req.body;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
     
+    // GOOGLE KI LATEST DOCUMENTATION KE MUTABIK SAHI PRODUCTION URL:
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: query }] }] })
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: query }] }]
+            })
         });
         
         const data = await response.json();
         
-        // Agar response sahi aaya
         if (data.candidates && data.candidates[0].content) {
             res.json({ response: data.candidates[0].content.parts[0].text });
         } else {
-            // Agar API ne koi error diya, toh wo screen par dikhega
             res.json({ response: "API Error: " + JSON.stringify(data) });
         }
     } catch (e) {
-        // Agar server crash hua, toh EXACT reason screen par dikhega
         res.json({ response: "Server Crash: " + e.message });
     }
 });
