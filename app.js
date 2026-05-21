@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
@@ -17,11 +18,21 @@ app.post('/api/ai', async (req, res) => {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ contents: [{ parts: [{ text: query }] }] })
         });
+        
         const data = await response.json();
-        res.json({ response: data.candidates[0].content.parts[0].text });
+        
+        // Agar response sahi aaya
+        if (data.candidates && data.candidates[0].content) {
+            res.json({ response: data.candidates[0].content.parts[0].text });
+        } else {
+            // Agar API ne koi error diya, toh wo screen par dikhega
+            res.json({ response: "API Error: " + JSON.stringify(data) });
+        }
     } catch (e) {
-        res.json({ response: "Error: Connection failed." });
+        // Agar server crash hua, toh EXACT reason screen par dikhega
+        res.json({ response: "Server Crash: " + e.message });
     }
 });
 
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.listen(PORT, () => console.log('Neura AI is live.'));
