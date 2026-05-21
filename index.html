@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head><title>AI Chat</title></head>
+<body>
+    <div id="chat"></div>
+    <input type="text" id="input" placeholder="Kuch likho...">
+    <button onclick="send()">Send</button>
+
+    <script>
+        async function send() {
+            const msg = document.getElementById('input').value;
+            const res = await fetch('https://neura-x.onrender.com/api/chat', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ message: msg })
+            });
+            const data = await res.json();
+            document.getElementById('chat').innerHTML += `<p>AI: ${data.response}</p>`;
+        }
+    </script>
+</body>
+</html>
