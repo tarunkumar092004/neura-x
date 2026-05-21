@@ -1,17 +1,16 @@
 const express = require('express');
-const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, '.')));
+app.use(express.static(__dirname));
 
 const API_KEY = "AIzaSyDB_ldn7yopDMvPcN1fvuiuoVxX4aAA9-Y";
 
 app.post('/api/ai', async (req, res) => {
     const { query } = req.body;
     const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
-
+    
     try {
         const response = await fetch(url, {
             method: 'POST',
@@ -19,17 +18,10 @@ app.post('/api/ai', async (req, res) => {
             body: JSON.stringify({ contents: [{ parts: [{ text: query }] }] })
         });
         const data = await response.json();
-        if (data.candidates && data.candidates[0].content) {
-            res.json({ response: data.candidates[0].content.parts[0].text });
-        } else {
-            res.json({ response: "Error: " + JSON.stringify(data.error) });
-        }
+        res.json({ response: data.candidates[0].content.parts[0].text });
     } catch (e) {
-        res.json({ response: "Connection Failed." });
+        res.json({ response: "Error: Connection failed." });
     }
 });
 
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
-app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, 'index.html'))); // Dashboard ke liye index use kar rahe hain
-
-app.listen(PORT, () => console.log(`Neura AI running on ${PORT}`));
+app.listen(PORT, () => console.log('Neura AI is live.'));

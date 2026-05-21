@@ -1,32 +1,19 @@
 <!DOCTYPE html>
 <html>
 <body>
-    <div id="chat"></div>
-    <input type="text" id="input" placeholder="Kuch likho...">
+    <input id="q" placeholder="Kuch likho...">
     <button onclick="send()">Send</button>
-
+    <p id="res"></p>
     <script>
         async function send() {
-            const input = document.getElementById('input');
-            const chat = document.getElementById('chat');
-            const msg = input.value;
-            if(!msg) return;
-            
-            chat.innerHTML += `<p><b>Aap:</b> ${msg}</p>`;
-            input.value = 'Thinking...';
-            
-            try {
-                const res = await fetch('https://neura-x.onrender.com/api/chat', {
-                    method: 'POST',
-                    headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ message: msg })
-                });
-                const data = await res.json();
-                chat.innerHTML += `<p><b>AI:</b> ${data.response}</p>`;
-            } catch (err) {
-                chat.innerHTML += `<p><b>Error:</b> Server se connection nahi hua.</p>`;
-            }
-            input.value = '';
+            let q = document.getElementById('q').value;
+            let res = await fetch('/api/ai', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({query: q})
+            });
+            let data = await res.json();
+            document.getElementById('res').innerText = data.response;
         }
     </script>
 </body>
