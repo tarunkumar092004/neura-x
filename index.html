@@ -35,7 +35,7 @@
         <p>Future Ka Sabse Smart AI</p>
     </div>
     <div class="chat-body" id="chatBody">
-        <div class="message neura">⚡ NEURA AI Systems Online. Personality aur Voice system ready hain. Kuch bhi pucho Tarun bhai!</div>
+        <div class="message neura">⚡ NEURA AI Systems Online. Kuch bhi pucho Tarun bhai, main ready hoon!</div>
     </div>
     <div class="input-container">
         <div class="input-box-wrapper"><input type="text" id="msgInput" placeholder="Kuch bolo bhai..." autocomplete="off" onkeydown="handleKey(event)"></div>
@@ -49,13 +49,10 @@
 
     function handleKey(e) { if (e.key === 'Enter') sendMessage(); }
 
-    // REAL-TIME AI VOICE FUNCTION
     function speak(text) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.pitch = 1.1; 
-        utterance.rate = 1.0; 
-        utterance.lang = 'hi-IN'; // Hindi-English mix support
+        utterance.pitch = 1.1; utterance.rate = 1.0; utterance.lang = 'hi-IN';
         window.speechSynthesis.speak(utterance);
     }
 
@@ -75,30 +72,38 @@
         chatBody.appendChild(loadingDiv);
         chatBody.scrollTop = chatBody.scrollHeight;
 
+        // Super flexible headers settings to bypass mobile browser limits
         fetch('https://neura-x.onrender.com/api/chat', {
             method: 'POST',
-            mode: 'cors',
             headers: { 
-                'Content-Type': 'application/json',
-                'Accept': 'application/json'
+                'Content-Type': 'application/json'
             },
             body: JSON.stringify({ message: text })
         })
-        .then(res => {
-            if (!res.ok) throw new Error('Server issues: ' + res.status);
+        .then(async res => {
+            if (!res.ok) {
+                const errText = await res.text();
+                throw new Error(errText || 'Status: ' + res.status);
+            }
             return res.json();
         })
         .then(data => {
-            document.getElementById(loadingId).remove();
+            const loadEl = document.getElementById(loadingId);
+            if(loadEl) loadEl.remove();
+            
             if (data.response) {
                 appendMessage(data.response, 'neura');
-                speak(data.response); // Text to Speech triggered
-            } else { appendMessage(data.error || "Misfire in response", 'neura'); }
+                speak(data.response);
+            } else { 
+                appendMessage(data.error || "Misfire in response", 'neura'); 
+            }
             chatBody.scrollTop = chatBody.scrollHeight;
         })
         .catch((err) => {
-            document.getElementById(loadingId).remove();
-            appendMessage("Core connection issue. Retrying...", 'neura');
+            const loadEl = document.getElementById(loadingId);
+            if(loadEl) loadEl.remove();
+            
+            appendMessage("Server connecting... Ek baar page refresh karke dobara try karo bhai.", 'neura');
             console.error(err);
         });
     }
