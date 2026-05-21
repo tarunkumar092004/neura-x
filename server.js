@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 10000;
 app.use(cors());
 app.use(express.json());
 
-// API Key setup
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 app.post('/api/chat', async (req, res) => {
@@ -18,7 +17,6 @@ app.post('/api/chat', async (req, res) => {
         const result = await model.generateContent(message);
         res.json({ response: result.response.text() });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: "Server error" });
     }
 });
