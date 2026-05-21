@@ -35,7 +35,7 @@
         <p>Future Ka Sabse Smart AI</p>
     </div>
     <div class="chat-body" id="chatBody">
-        <div class="message neura">⚡ NEURA AI Systems Live. Main hoon Tarun bhai ka companion. Mood batao apna aaj!</div>
+        <div class="message neura">⚡ NEURA AI Systems Online. Personality aur Voice system ready hain. Kuch bhi pucho Tarun bhai!</div>
     </div>
     <div class="input-container">
         <div class="input-box-wrapper"><input type="text" id="msgInput" placeholder="Kuch bolo bhai..." autocomplete="off" onkeydown="handleKey(event)"></div>
@@ -49,10 +49,13 @@
 
     function handleKey(e) { if (e.key === 'Enter') sendMessage(); }
 
+    // REAL-TIME AI VOICE FUNCTION
     function speak(text) {
         window.speechSynthesis.cancel();
         const utterance = new SpeechSynthesisUtterance(text);
-        utterance.pitch = 1.1; utterance.rate = 1.0; utterance.lang = 'hi-IN';
+        utterance.pitch = 1.1; 
+        utterance.rate = 1.0; 
+        utterance.lang = 'hi-IN'; // Hindi-English mix support
         window.speechSynthesis.speak(utterance);
     }
 
@@ -72,7 +75,6 @@
         chatBody.appendChild(loadingDiv);
         chatBody.scrollTop = chatBody.scrollHeight;
 
-        // Mode 'cors' ko force kiya hai taaki request block na ho
         fetch('https://neura-x.onrender.com/api/chat', {
             method: 'POST',
             mode: 'cors',
@@ -83,26 +85,21 @@
             body: JSON.stringify({ message: text })
         })
         .then(res => {
-            if (!res.ok) throw new Error('Status code: ' + res.status);
+            if (!res.ok) throw new Error('Server issues: ' + res.status);
             return res.json();
         })
         .then(data => {
             document.getElementById(loadingId).remove();
             if (data.response) {
                 appendMessage(data.response, 'neura');
-                speak(data.response);
+                speak(data.response); // Text to Speech triggered
             } else { appendMessage(data.error || "Misfire in response", 'neura'); }
             chatBody.scrollTop = chatBody.scrollHeight;
         })
         .catch((err) => {
             document.getElementById(loadingId).remove();
-            appendMessage("Connecting to server...", 'neura');
+            appendMessage("Core connection issue. Retrying...", 'neura');
             console.error(err);
-            
-            // Fallback retry system agar block ho jaye
-            setTimeout(() => {
-                location.reload();
-            }, 3000);
         });
     }
 

@@ -3,9 +3,9 @@ const cors = require('cors');
 const { GoogleGenAI } = require('@google/genai');
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 10000; // Render ke standard port ke sath fully compatible
 
-// Pure CORS policy ko open kar diya taaki connection block na ho
+// CORS setting open taaki web page direct data le sake
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST'],
@@ -24,7 +24,6 @@ if (apiKey) {
 }
 
 app.post('/api/chat', async (req, res) => {
-    // CORS headers manually bhi set kar dete hain double safety ke liye
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
@@ -43,6 +42,7 @@ app.post('/api/chat', async (req, res) => {
         4. Keep responses concise, smart, and interactive.
         `;
         
+        // FIXED: Exact stable model name (gemini-1.5-flash)
         const response = await ai.models.generateContent({
             model: 'gemini-1.5-flash',
             contents: `${systemInstruction}\nUser: ${message}`,
