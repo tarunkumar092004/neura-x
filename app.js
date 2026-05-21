@@ -15,10 +15,11 @@ app.post('/api/chat', async (req, res) => {
         const { message } = req.body;
         const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
         const result = await model.generateContent(message);
-        res.json({ response: result.response.text() });
+        const responseText = await result.response.text();
+        res.json({ response: responseText });
     } catch (e) {
-        res.status(500).json({ error: e.message });
+        res.status(500).json({ response: "Error: " + e.message });
     }
 });
 
-app.listen(port, () => console.log('Server running'));
+app.listen(port, () => console.log('Server running on port ' + port));
