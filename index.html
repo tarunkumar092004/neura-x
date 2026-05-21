@@ -72,9 +72,10 @@
         chatBody.appendChild(loadingDiv);
         chatBody.scrollTop = chatBody.scrollHeight;
 
-        // FIXED: Direct exact Render API URL call
+        // Mode 'cors' ko force kiya hai taaki request block na ho
         fetch('https://neura-x.onrender.com/api/chat', {
             method: 'POST',
+            mode: 'cors',
             headers: { 
                 'Content-Type': 'application/json',
                 'Accept': 'application/json'
@@ -82,7 +83,7 @@
             body: JSON.stringify({ message: text })
         })
         .then(res => {
-            if (!res.ok) throw new Error('Network response status: ' + res.status);
+            if (!res.ok) throw new Error('Status code: ' + res.status);
             return res.json();
         })
         .then(data => {
@@ -95,8 +96,13 @@
         })
         .catch((err) => {
             document.getElementById(loadingId).remove();
-            appendMessage("Core connection issue resolved? Try again.", 'neura');
+            appendMessage("Connecting to server...", 'neura');
             console.error(err);
+            
+            // Fallback retry system agar block ho jaye
+            setTimeout(() => {
+                location.reload();
+            }, 3000);
         });
     }
 
