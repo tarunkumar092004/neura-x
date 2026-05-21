@@ -1,19 +1,43 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neura AI</title>
+    <style>
+        body { background: #0d1117; color: #00f2ff; font-family: sans-serif; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .chat-box { width: 90%; max-width: 500px; background: #161b22; padding: 20px; border-radius: 10px; box-shadow: 0 0 15px #00f2ff33; border: 1px solid #00f2ff; }
+        input { width: 75%; padding: 10px; background: #21262d; border: 1px solid #30363d; color: #fff; border-radius: 5px; outline: none; }
+        button { width: 20%; padding: 10px; background: #00f2ff; border: none; color: #000; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        p { margin-top: 20px; color: #c9d1d9; line-height: 1.5; max-height: 200px; overflow-y: auto; }
+    </style>
+</head>
 <body>
-    <input id="q" placeholder="Kuch likho...">
-    <button onclick="send()">Send</button>
-    <p id="res"></p>
+    <div class="chat-box">
+        <h2 style="text-align:center; margin-top:0;">NEURA AI</h2>
+        <div style="display: flex; justify-content: space-between;">
+            <input id="q" placeholder="Ask Neura Anything...">
+            <button onclick="send()">Send</button>
+        </div>
+        <p id="res">Waiting for input...</p>
+    </div>
+
     <script>
         async function send() {
             let q = document.getElementById('q').value;
-            let res = await fetch('/api/ai', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({query: q})
-            });
-            let data = await res.json();
-            document.getElementById('res').innerText = data.response;
+            if(!q) return;
+            document.getElementById('res').innerText = "Neura is thinking...";
+            try {
+                let res = await fetch('/api/ai', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({query: q})
+                });
+                let data = await res.json();
+                document.getElementById('res').innerText = data.response;
+            } catch(e) {
+                document.getElementById('res').innerText = "Error: Something went wrong.";
+            }
         }
     </script>
 </body>

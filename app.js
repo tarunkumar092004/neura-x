@@ -11,7 +11,7 @@ const API_KEY = "AIzaSyDB_ldn7yopDMvPcN1fvuiuoVxX4aAA9-Y";
 app.post('/api/ai', async (req, res) => {
     const { query } = req.body;
     
-    // GOOGLE KI LATEST DOCUMENTATION KE MUTABIK SAHI PRODUCTION URL:
+    // Sahi URL format version 1 ke liye
     const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
     try {
