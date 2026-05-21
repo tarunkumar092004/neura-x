@@ -3,59 +3,30 @@ const cors = require('cors');
 const { GoogleGenAI } = require('@google/genai');
 
 const app = express();
-const PORT = process.env.PORT || 10000; // Render ke standard port ke sath fully compatible
+const PORT = process.env.PORT || 10000;
 
-// CORS setting open taaki web page direct data le sake
-app.use(cors({
-    origin: '*',
-    methods: ['GET', 'POST'],
-    allowedHeaders: ['Content-Type', 'Accept']
-}));
+app.use(cors({ origin: '*', methods: ['GET', 'POST'], allowedHeaders: ['Content-Type'] }));
 app.use(express.json());
 
 const apiKey = process.env.GEMINI_API_KEY;
-let ai;
-
-if (apiKey) {
-    ai = new GoogleGenAI({ apiKey: apiKey });
-    console.log("⚡ [SUCCESS] Neura AI Engine Initialized.");
-} else {
-    console.log("⚠️ [WARNING] GEMINI_API_KEY missing!");
-}
+const ai = apiKey ? new GoogleGenAI({ apiKey: apiKey }) : null;
 
 app.post('/api/chat', async (req, res) => {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-
     try {
         const { message } = req.body;
-        if (!message) return res.status(400).json({ error: "Message missing hai bhai!" });
         if (!ai) return res.status(500).json({ error: "AI Engine offline." });
 
-        const systemInstruction = `
-        You are NEURA AI, the world's smartest premium AI assistant. 
-        Your master is Tarun Kumar. 
-        You have advanced human empathy:
-        1. Automatically detect user's mood (Angry, Sad, Happy).
-        2. If the user is ANGRY, respond with extreme calmness, logic, and friendly support. Never fight back.
-        3. Match the user's language (mix Hindi and English casually like a close buddy).
-        4. Keep responses concise, smart, and interactive.
-        `;
+        // Yahan dekho, model ka naam 1.5 hai, 1.6 nahi
+        const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
         
-        // FIXED: Exact stable model name (gemini-1.5-flash)
-        const response = await ai.models.generateContent({
-            model: 'gemini-1.5-flash',
-            contents: `${systemInstruction}\nUser: ${message}`,
-        });
-
-        res.json({ response: response.text });
-
+        const result = await model.generateContent(`You are NEURA AI, a smart friend. Keep response concise, friendly, and in Hinglish. User message: ${message}`);
+        const response = await result.response;
+        
+        res.json({ response: response.text() });
     } catch (error) {
         console.error("API Error:", error);
-        res.status(500).json({ error: "Core connection issue." });
+        res.status(500).json({ error: "Connection error, retry please." });
     }
 });
 
-app.get('/', (req, res) => { res.send("NEURA AI Brain is Live! 🚀"); });
-
-app.listen(PORT, () => { console.log(`🚀 NEURA AI running on port ${PORT}`); });
+app.listen(PORT, () => console.log(`🚀 NEURA AI live on ${PORT}`));
